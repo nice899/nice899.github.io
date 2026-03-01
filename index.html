@@ -39,7 +39,7 @@ header{
   100%{transform:translateY(0);}
 }
 
-/* แตกเป็นชิ้น */
+/* แตก */
 .piece{
   position:absolute;
   width:60px;
@@ -55,6 +55,23 @@ header{
     transform:translate(var(--x), var(--y)) scale(0.4);
     opacity:0;
   }
+}
+
+/* ===== Picture Rain ===== */
+.rain{
+  position:fixed;
+  top:-120px;
+  border-radius:50%;
+  pointer-events:none;
+  animation-name:rainDrop;
+  animation-timing-function:linear;
+  animation-fill-mode:forwards;
+  z-index:1;
+}
+
+@keyframes rainDrop{
+  from{ transform:translateY(0); opacity:1; }
+  to{ transform:translateY(120vh); opacity:0.3; }
 }
 
 h1{
@@ -133,6 +150,7 @@ footer{
 
   <button class="button" onclick="toggleMatrix()">Show / Hide Matrix</button>
   <button class="button" onclick="explodePic()">Explode Picture 💥</button>
+  <button class="button" onclick="pictureRain()">Picture Rain 🌧️</button>
 </section>
 
 <section>
@@ -233,6 +251,60 @@ function explodePic(){
     }
 
   },600);
+}
+
+/* ================= Picture Rain ================= */
+
+function pictureRain(){
+  const imageSrc = document.querySelector(".profile").src;
+
+  for(let i=0;i<80;i++){
+
+    const img = document.createElement("img");
+    img.src = imageSrc;
+    img.className = "rain";
+
+    img.style.left = Math.random() * window.innerWidth + "px";
+
+    const size = Math.random() * 60 + 30;
+    img.style.width = size + "px";
+
+    const duration = Math.random() * 3 + 2;
+    img.style.animationDuration = duration + "s";
+
+    document.body.appendChild(img);
+
+    setTimeout(()=>{
+      explodeRain(img);
+      img.remove();
+    }, duration * 1000);
+  }
+}
+
+function explodeRain(original){
+
+  for(let i=0;i<6;i++){
+
+    const piece = document.createElement("img");
+    piece.src = original.src;
+    piece.style.position="fixed";
+    piece.style.width="40px";
+    piece.style.borderRadius="50%";
+    piece.style.left = original.style.left;
+    piece.style.top = "85vh";
+    piece.style.pointerEvents="none";
+
+    const x = (Math.random()*300 - 150) + "px";
+    const y = (Math.random()*300 - 150) + "px";
+
+    piece.style.setProperty("--x", x);
+    piece.style.setProperty("--y", y);
+    piece.className="piece";
+
+    document.body.appendChild(piece);
+
+    setTimeout(()=> piece.remove(),1000);
+  }
 }
 </script>
 
