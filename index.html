@@ -2,125 +2,113 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dark Anonymous</title>
+<title>My Profile</title>
 
 <style>
 body{
   margin:0;
-  background:black;
-  overflow:hidden;
-  color:#00ff00;
+  background:#0a0a0a;
+  color:#00ff88;
   font-family:Courier New, monospace;
   text-align:center;
 }
 
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
-  z-index:-1;
+header{
+  padding:40px 20px;
 }
 
 h1{
-  font-size:50px;
-  margin-top:60px;
-  text-shadow:0 0 20px #00ff00;
-  animation:flicker 2s infinite alternate;
-}
-
-@keyframes flicker{
-  from{opacity:0.8;}
-  to{opacity:1;}
+  font-size:40px;
+  margin:10px 0;
+  text-shadow:0 0 20px #00ff88;
 }
 
 .profile{
-  width:220px;
+  width:200px;
   border-radius:50%;
-  border:3px solid #00ff00;
-  box-shadow:0 0 40px #00ff00;
-  margin:20px auto;
-  display:block;
-  animation:spin 10s linear infinite;
+  border:3px solid #00ff88;
+  box-shadow:0 0 40px #00ff88;
+  margin-top:20px;
 }
 
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
-
-.box{
-  border:2px solid #00ff00;
-  width:300px;
-  margin:20px auto;
+section{
+  max-width:600px;
+  margin:40px auto;
   padding:20px;
-  box-shadow:0 0 30px #00ff00;
+  border:1px solid #00ff88;
+  box-shadow:0 0 20px #00ff88;
+}
+
+h2{
+  border-bottom:1px solid #00ff88;
+  padding-bottom:10px;
+}
+
+.skills span{
+  display:inline-block;
+  margin:5px;
+  padding:5px 10px;
+  border:1px solid #00ff88;
+  border-radius:20px;
 }
 
 a{
-  color:#00ff00;
+  color:#00ff88;
   text-decoration:none;
-  display:block;
+  display:inline-block;
   margin:10px;
+  padding:10px 20px;
+  border:1px solid #00ff88;
   transition:0.3s;
 }
 
 a:hover{
-  color:red;
-  transform:scale(1.2);
+  background:#00ff88;
+  color:black;
+}
+footer{
+  margin:40px 0;
+  font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="matrix"></canvas>
+<header>
+  <img src="IMG_20260128_143022.jpg" class="profile">
+  <h1>Your Name</h1>
+  <p>Web Developer | Gamer | Creator</p>
+</header>
 
-<h1>ANONYMOUS</h1>
+<section>
+  <h2>About Me</h2>
+  <p>
+    สวัสดี 👋 ผมเป็นคนที่ชอบทำเว็บไซต์ เขียนโค้ด
+    และสร้างอะไรเท่ ๆ บนอินเทอร์เน็ต
+  </p>
+</section>
 
-<img src="IMG_20260128_143022.jpg" class="profile">
+<section>
+  <h2>Skills</h2>
+  <div class="skills">
+    <span>HTML</span>
+    <span>CSS</span>
+    <span>JavaScript</span>
+    <span>Roblox Script</span>
+  </div>
+</section>
 
-<p>ACCESS GRANTED • WELCOME TO THE DARK SIDE</p>
-
-<div class="box">
+<section>
+  <h2>Contact</h2>
   <a href="#">Instagram</a>
   <a href="#">Discord</a>
   <a href="#">GitHub</a>
-</div>
+</section>
 
-<script>
-const canvas=document.getElementById("matrix");
-const ctx=canvas.getContext("2d");
-
-canvas.height=window.innerHeight;
-canvas.width=window.innerWidth;
-
-const letters="01";
-const fontSize=14;
-const columns=canvas.width/fontSize;
-const drops=[];
-
-for(let x=0;x<columns;x++) drops[x]=1;
-
-function draw(){
-  ctx.fillStyle="rgba(0,0,0,0.05)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  ctx.fillStyle="#0f0";
-  ctx.font=fontSize+"px monospace";
-
-  for(let i=0;i<drops.length;i++){
-    const text=letters[Math.floor(Math.random()*letters.length)];
-    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-    if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-      drops[i]=0;
-
-    drops[i]++;
-  }
-}
-
-setInterval(draw,33);
-</script>
+<footer>
+  © 2026 Your Name
+</footer>
 
 </body>
 </html>
