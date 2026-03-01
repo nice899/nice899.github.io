@@ -1,51 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dark Anonymous</title>
+<meta charset="UTF-8">
+<title>Dark Anonymous - Full System</title>
 <style>
-body {
-  margin: 0;
-  background: black;
-  color: #00ff00;
-  font-family: "Courier New", monospace;
-  text-align: center;
-  overflow: hidden;
+body{
+  margin:0;
+  background:black;
+  color:#00ff00;
+  font-family:"Courier New",monospace;
+  text-align:center;
+  overflow:hidden;
 }
-
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
+canvas{
+  position:fixed;top:0;left:0;z-index:-1;
 }
-
-h1 {
-  margin-top: 100px;
-  font-size: 50px;
-  text-shadow: 0 0 15px #00ff00;
+h1{
+  margin-top:80px;
+  font-size:50px;
+  text-shadow:0 0 20px #00ff00;
+  animation:glitch 1s infinite;
 }
-
-.box {
-  border: 1px solid #00ff00;
-  padding: 20px;
-  margin: 20px auto;
-  width: 320px;
-  box-shadow: 0 0 20px #00ff00;
+@keyframes glitch{
+  0%{text-shadow:2px 2px #0f0,-2px -2px #0f0;}
+  25%{text-shadow:-2px 2px #0f0,2px -2px #0f0;}
+  50%{text-shadow:2px -2px #0f0,-2px 2px #0f0;}
+  100%{text-shadow:0 0 20px #0f0;}
 }
-
-a {
-  color: #00ff00;
-  text-decoration: none;
-  display: block;
-  margin: 10px;
+.profile{
+  width:200px;
+  border-radius:50%;
+  border:2px solid #00ff00;
+  box-shadow:0 0 30px #00ff00;
+  margin-top:20px;
+  animation:spin 12s linear infinite;
 }
-
-a:hover {
-  color: red;
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+.box{
+  border:1px solid #00ff00;
+  padding:20px;
+  margin:20px auto;
+  width:320px;
+  box-shadow:0 0 20px #00ff00;
+}
+a{
+  color:#00ff00;
+  text-decoration:none;
+  display:block;
+  margin:10px;
+}
+a:hover{color:red;}
+button{
+  background:black;
+  color:#00ff00;
+  border:1px solid #00ff00;
+  padding:10px 20px;
+  cursor:pointer;
+  margin-top:10px;
+}
+button:hover{
+  background:#00ff00;
+  color:black;
 }
 </style>
 </head>
-
 <body>
 
 <canvas id="matrix"></canvas>
@@ -53,61 +74,59 @@ a:hover {
 <h1>ANONYMOUS</h1>
 <p id="typing"></p>
 
+<img src="profile.png" class="profile">
+
 <div class="box">
   <a href="#">Instagram</a>
   <a href="#">Discord</a>
   <a href="#">GitHub</a>
+  <button onclick="playSound()">ENTER SYSTEM</button>
 </div>
 
+<audio id="sound" src="https://www.myinstants.com/media/sounds/windows-error.mp3"></audio>
+
 <script>
-// Typing effect
-let text = "ACCESS GRANTED... WELCOME TO THE DARK SIDE.";
-let i = 0;
-function type() {
-  if (i < text.length) {
-    document.getElementById("typing").innerHTML += text.charAt(i);
+// Typing Effect
+let text="ACCESS GRANTED... WELCOME TO THE DARK SIDE.";
+let i=0;
+function type(){
+  if(i<text.length){
+    document.getElementById("typing").innerHTML+=text.charAt(i);
     i++;
-    setTimeout(type, 60);
+    setTimeout(type,60);
   }
 }
 type();
 
-// Matrix effect
-let canvas = document.getElementById("matrix");
-let ctx = canvas.getContext("2d");
+// Sound
+function playSound(){
+  document.getElementById("sound").play();
+}
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-
-let letters = "01";
-letters = letters.split("");
-
-let fontSize = 14;
-let columns = canvas.width / fontSize;
-let drops = [];
-
-for (let x = 0; x < columns; x++)
-  drops[x] = 1;
-
-function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#00ff00";
-  ctx.font = fontSize + "px monospace";
-
-  for (let i = 0; i < drops.length; i++) {
-    let text = letters[Math.floor(Math.random() * letters.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-      drops[i] = 0;
-
+// Matrix Effect
+let canvas=document.getElementById("matrix");
+let ctx=canvas.getContext("2d");
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+let letters="01".split("");
+let fontSize=14;
+let columns=canvas.width/fontSize;
+let drops=[];
+for(let x=0;x<columns;x++) drops[x]=1;
+function draw(){
+  ctx.fillStyle="rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#00ff00";
+  ctx.font=fontSize+"px monospace";
+  for(let i=0;i<drops.length;i++){
+    let text=letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+    if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)
+      drops[i]=0;
     drops[i]++;
   }
 }
-
-setInterval(draw, 33);
+setInterval(draw,33);
 </script>
 
 </body>
