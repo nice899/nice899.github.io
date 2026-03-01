@@ -74,14 +74,48 @@ header{
   to{ transform:translateY(120vh); opacity:0.3; }
 }
 
-h1{
-  margin:15px 0 5px;
-  font-size:32px;
+/* ===== FULLSCREEN JUMPSCARE ===== */
+#jumpscareLayer{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  background:black;
+  display:none;
+  z-index:99999;
 }
 
-.subtitle{
-  opacity:0.8;
+#jumpscareLayer img{
+  width:100vw;
+  height:100vh;
+  object-fit:cover;
 }
+
+/* กระพริบแรง */
+.flash{
+  animation:flashEffect 0.08s infinite alternate;
+}
+
+@keyframes flashEffect{
+  from{filter:brightness(0.5) contrast(1);}
+  to{filter:brightness(1.8) contrast(2);}
+}
+
+/* สั่นจอ */
+.shake{
+  animation:shakeEffect 0.05s infinite;
+}
+
+@keyframes shakeEffect{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(8px,-8px);}
+  50%{transform:translate(-8px,8px);}
+  75%{transform:translate(8px,8px);}
+  100%{transform:translate(-8px,-8px);}
+}
+
+h1{ margin:15px 0 5px; font-size:32px; }
+.subtitle{ opacity:0.8; }
 
 section{
   max-width:700px;
@@ -93,20 +127,13 @@ section{
   z-index:2;
 }
 
-h2{
-  border-bottom:1px solid #00ff88;
-  padding-bottom:10px;
-}
-
 .button{
   display:inline-block;
   margin:10px 5px;
   padding:10px 20px;
   border:1px solid #00ff88;
-  text-decoration:none;
   color:#00ff88;
   background:none;
-  transition:0.3s;
   cursor:pointer;
 }
 
@@ -151,18 +178,24 @@ footer{
   <button class="button" onclick="toggleMatrix()">Show / Hide Matrix</button>
   <button class="button" onclick="explodePic()">Explode Picture 💥</button>
   <button class="button" onclick="pictureRain()">Picture Rain 🌧️</button>
+  <button class="button" onclick="triggerJumpscare()">Jumpscare 💀</button>
 </section>
 
 <section>
   <h2>Contact</h2>
-
   <a href="https://www.youtube.com/@BC.AN90" target="_blank" class="button">YouTube</a>
   <a href="https://github.com/nice899" target="_blank" class="button">GitHub</a>
   <a href="https://www.instagram.com/niaiman_444" target="_blank" class="button">Instagram</a>
-
 </section>
 
 <canvas id="matrix"></canvas>
+
+<!-- JUMPSCARE FULLSCREEN -->
+<div id="jumpscareLayer">
+  <img src="IMG_20260128_143022.jpg">
+</div>
+
+<audio id="Scary Screamer - Sound Effect Free.mp3" src="scare.mp3"></audio>
 
 <footer>
   © 2026 Aiman
@@ -173,138 +206,105 @@ let interval;
 let running = false;
 
 /* ================= Matrix ================= */
-
 function toggleMatrix(){
-  const canvas = document.getElementById("matrix");
-  const ctx = canvas.getContext("2d");
+  const canvas=document.getElementById("matrix");
+  const ctx=canvas.getContext("2d");
 
   if(running){
     clearInterval(interval);
-    canvas.style.display = "none";
-    running = false;
+    canvas.style.display="none";
+    running=false;
     return;
   }
 
-  canvas.style.display = "block";
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
+  canvas.style.display="block";
+  canvas.height=window.innerHeight;
+  canvas.width=window.innerWidth;
 
-  const letters = "01";
-  const fontSize = 16;
-  const columns = canvas.width / fontSize;
-  const drops = [];
+  const letters="01";
+  const fontSize=16;
+  const columns=canvas.width/fontSize;
+  const drops=[];
 
-  for(let x = 0; x < columns; x++)
-    drops[x] = 1;
+  for(let x=0;x<columns;x++) drops[x]=1;
 
   function draw(){
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle="rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#00ff88";
+    ctx.font=fontSize+"px monospace";
 
-    ctx.fillStyle = "#00ff88";
-    ctx.font = fontSize + "px monospace";
-
-    for(let i = 0; i < drops.length; i++){
-      const text = letters.charAt(Math.floor(Math.random()*letters.length));
-      ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-      if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
-        drops[i] = 0;
-
+    for(let i=0;i<drops.length;i++){
+      const text=letters.charAt(Math.floor(Math.random()*letters.length));
+      ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)
+        drops[i]=0;
       drops[i]++;
     }
   }
 
-  interval = setInterval(draw, 33);
-  running = true;
+  interval=setInterval(draw,33);
+  running=true;
 }
 
 /* ================= Explode ================= */
-
 function explodePic(){
-  const pic = document.querySelector(".profile");
-  const header = document.querySelector("header");
+  const pic=document.querySelector(".profile");
+  const header=document.querySelector("header");
 
   pic.classList.remove("fall");
   void pic.offsetWidth;
   pic.classList.add("fall");
 
-  setTimeout(() => {
-
+  setTimeout(()=>{
     for(let i=0;i<14;i++){
-      const piece = document.createElement("img");
-      piece.src = pic.src;
-      piece.className = "piece";
-
-      piece.style.left = pic.offsetLeft + 55 + "px";
-      piece.style.top = pic.offsetTop + 55 + "px";
-
-      const randomX = (Math.random()*500 - 250) + "px";
-      const randomY = (Math.random()*500 - 250) + "px";
-
-      piece.style.setProperty("--x", randomX);
-      piece.style.setProperty("--y", randomY);
-
+      const piece=document.createElement("img");
+      piece.src=pic.src;
+      piece.className="piece";
+      piece.style.left=pic.offsetLeft+55+"px";
+      piece.style.top=pic.offsetTop+55+"px";
+      piece.style.setProperty("--x",(Math.random()*500-250)+"px");
+      piece.style.setProperty("--y",(Math.random()*500-250)+"px");
       header.appendChild(piece);
-
-      setTimeout(()=> piece.remove(),1000);
+      setTimeout(()=>piece.remove(),1000);
     }
-
   },600);
 }
 
 /* ================= Picture Rain ================= */
-
 function pictureRain(){
-  const imageSrc = document.querySelector(".profile").src;
+  const imageSrc=document.querySelector(".profile").src;
 
   for(let i=0;i<80;i++){
-
-    const img = document.createElement("img");
-    img.src = imageSrc;
-    img.className = "rain";
-
-    img.style.left = Math.random() * window.innerWidth + "px";
-
-    const size = Math.random() * 60 + 30;
-    img.style.width = size + "px";
-
-    const duration = Math.random() * 3 + 2;
-    img.style.animationDuration = duration + "s";
-
+    const img=document.createElement("img");
+    img.src=imageSrc;
+    img.className="rain";
+    img.style.left=Math.random()*window.innerWidth+"px";
+    img.style.width=(Math.random()*60+30)+"px";
+    img.style.animationDuration=(Math.random()*3+2)+"s";
     document.body.appendChild(img);
 
-    setTimeout(()=>{
-      explodeRain(img);
-      img.remove();
-    }, duration * 1000);
+    setTimeout(()=>img.remove(),4000);
   }
 }
 
-function explodeRain(original){
+/* ================= FULLSCREEN JUMPSCARE ================= */
+function triggerJumpscare(){
+  const layer=document.getElementById("jumpscareLayer");
+  const sound=document.getElementById("jumpscareSound");
 
-  for(let i=0;i<6;i++){
+  layer.style.display="block";
+  layer.classList.add("flash");
+  document.body.classList.add("shake");
 
-    const piece = document.createElement("img");
-    piece.src = original.src;
-    piece.style.position="fixed";
-    piece.style.width="40px";
-    piece.style.borderRadius="50%";
-    piece.style.left = original.style.left;
-    piece.style.top = "85vh";
-    piece.style.pointerEvents="none";
+  sound.currentTime=0;
+  sound.play();
 
-    const x = (Math.random()*300 - 150) + "px";
-    const y = (Math.random()*300 - 150) + "px";
-
-    piece.style.setProperty("--x", x);
-    piece.style.setProperty("--y", y);
-    piece.className="piece";
-
-    document.body.appendChild(piece);
-
-    setTimeout(()=> piece.remove(),1000);
-  }
+  setTimeout(()=>{
+    layer.style.display="none";
+    layer.classList.remove("flash");
+    document.body.classList.remove("shake");
+  },2500);
 }
 </script>
 
